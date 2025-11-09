@@ -1,4 +1,4 @@
-from relationship_app.models import Author, Book, Library
+from relationship_app.models import Author, Book, Library, Librarian
 
 
 # 1️⃣ Query all books by a specific author
@@ -28,7 +28,7 @@ def get_books_in_library(library_name):
         print(f"- {book.title} (Author: {book.author.name})")
 
 
-# 3️⃣ Retrieve the librarian for a specific library
+# 3️⃣ Retrieve the librarian for a specific library (✅ uses Librarian.objects.get)
 def get_librarian_for_library(library_name):
     try:
         library = Library.objects.get(name=library_name)
@@ -36,15 +36,13 @@ def get_librarian_for_library(library_name):
         print(f"No library found with name '{library_name}'")
         return
 
-    librarian = getattr(library, "librarian", None)
-
-    if librarian:
+    try:
+        librarian = Librarian.objects.get(library=library)
         print(f"Librarian for {library.name}: {librarian.name}")
-    else:
+    except Librarian.DoesNotExist:
         print(f"{library.name} has no librarian assigned")
 
 
-# Example when run inside Django shell
 if __name__ == "__main__":
     get_books_by_author("John Doe")
     get_books_in_library("Central Library")
