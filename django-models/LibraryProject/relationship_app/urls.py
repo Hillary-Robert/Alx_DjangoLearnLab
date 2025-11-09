@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from . import views
 
 urlpatterns = [
-    # Existing
+    # Public / existing
     path('', views.list_books, name='home'),
     path('books/', views.list_books, name='list_books'),
     path('libraries/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
@@ -21,8 +21,13 @@ urlpatterns = [
         name='logout'
     ),
 
-    # ✅ Role-based URLs
+    # Role-based
     path('admin-view/', views.admin_view, name='admin_view'),
     path('librarian-view/', views.librarian_view, name='librarian_view'),
     path('member-view/', views.member_view, name='member_view'),
+
+    # ✅ Permission-protected Book views
+    path('books/add/', views.add_book, name='add_book'),
+    path('books/<int:pk>/edit/', views.edit_book, name='edit_book'),
+    path('books/<int:pk>/delete/', views.delete_book, name='delete_book'),
 ]
