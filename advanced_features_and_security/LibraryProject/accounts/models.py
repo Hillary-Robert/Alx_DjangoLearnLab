@@ -6,7 +6,7 @@ class CustomUserManager(UserManager):
     def create_user(self, username, email=None, password=None, **extra_fields):
         """
         Create and save a regular user with the given username, email,
-        password and extra fields (date_of_birth, profile_photo, etc.).
+        password and extra fields (like date_of_birth, profile_photo).
         """
         if not username:
             raise ValueError("The Username field is required")

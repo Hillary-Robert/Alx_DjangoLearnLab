@@ -7,6 +7,7 @@ from django.dispatch import receiver
 User = get_user_model()
 
 
+
 class Author(models.Model):
     name = models.CharField(max_length=255)
 
@@ -70,6 +71,7 @@ class UserProfile(models.Model):
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
 
+
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
@@ -83,3 +85,4 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
             instance.userprofile.save()
         else:
             UserProfile.objects.create(user=instance)
+
