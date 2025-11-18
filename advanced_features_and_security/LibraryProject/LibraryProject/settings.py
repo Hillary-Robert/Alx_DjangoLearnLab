@@ -45,10 +45,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "bookshelf",
     'relationship_app',
-    "accounts",
+    
 ]
 
-AUTH_USER_MODEL = "accounts.CustomUser"
+AUTH_USER_MODEL = "bookshelf.CustomUser"
+
 
 
 
