@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Books</h1>
+
+    <!-- Search form (GET) – no CSRF needed, but form input is validated in BookSearchForm -->
+    <form method="get">
+        {{ form.query.label_tag }}
+        {{ form.query }}
+        <button type="submit">Search</button>
+    </form>
+
+    <ul>
+        {% for book in books %}
+            <li>{{ book.title }} by {{ book.author }} ({{ book.publication_year }})</li>
+        {% empty %}
+            <li>No books found.</li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{% url 'bookshelf:form_example' %}">Add a new book</a></p>
+</body>
+</html>

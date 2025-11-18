@@ -26,7 +26,21 @@ MEDIA_ROOT = BASE_DIR / "media"
 SECRET_KEY = "django-insecure-+#w#^*g(_^%br#i%vku8x6l_521yeu9b22eojr6$7tksh%^w33"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+
+# --- Security settings ---
+
+# Protect against XSS and content type sniffing
+SECURE_BROWSER_XSS_FILTER = True  # Ask the browser to enable its XSS filter
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME sniffing
+
+# Clickjacking protection: prevent the site from being embedded in iframes
+X_FRAME_OPTIONS = "DENY"
+
+# Ensure cookies are only sent over HTTPS (for production)
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = []
 
@@ -61,6 +75,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    "LibraryProject.middleware.ContentSecurityPolicyMiddleware",
 ]
 
 ROOT_URLCONF = "LibraryProject.urls"
