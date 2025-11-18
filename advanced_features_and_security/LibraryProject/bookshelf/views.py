@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_protect
 
 from .models import Book
-from .forms import BookForm, BookSearchForm
+from .forms import BookForm, BookSearchForm, ExampleForm
 
 
 @csrf_protect
@@ -14,7 +14,7 @@ def book_list(request):
     """
     Secure book list view.
     - Uses Django ORM (no raw SQL) to avoid SQL injection.
-    - Uses a Django form to validate and clean search input.
+    - Uses a Django form (BookSearchForm) to validate and clean search input.
     - Requires 'bookshelf.can_view' permission.
     """
     form = BookSearchForm(request.GET or None)
@@ -23,15 +23,11 @@ def book_list(request):
     if form.is_valid():
         query = form.cleaned_data.get("query")
         if query:
-            # Safe filtering via ORM: protects against SQL injection
             books = books.filter(
                 Q(title__icontains=query) | Q(author__icontains=query)
             )
 
-    context = {
-        "books": books,
-        "form": form,
-    }
+    context = {"books": books, "form": form}
     return render(request, "bookshelf/book_list.html", context)
 
 
@@ -39,19 +35,22 @@ def book_list(request):
 @permission_required("bookshelf.can_create", raise_exception=True)
 def form_example(request):
     """
-    Example create view for books.
+    Example form view to demonstrate secure handling of user input.
     - Protected by CSRF.
-    - Uses a ModelForm for validation and safe creation.
+    - Uses ExampleForm for validation.
     - Requires 'bookshelf.can_create' permission.
     """
     if request.method == "POST":
-        form = BookForm(request.POST)
+        form = ExampleForm(request.POST)
         if form.is_valid():
-            # Safe: uses Django ORM without raw SQL
-            form.save()
-            return redirect("bookshelf:book_list")
+            # In a real app you might save or process this data here.
+            cleaned = form.cleaned_data
+            # We don't use raw SQL; we only read cleaned data.
+            return HttpResponse(
+                f"Received data safely from {cleaned['name']}."
+            )
     else:
-        form = BookForm()
+        form = ExampleForm()
 
     return render(request, "bookshelf/form_example.html", {"form": form})
 
@@ -59,7 +58,7 @@ def form_example(request):
 @permission_required("bookshelf.can_create", raise_exception=True)
 def book_create(request):
     """
-    Simple example endpoint to demonstrate 'can_create' permission check.
+    Simple endpoint to demonstrate 'can_create' permission.
     """
     return HttpResponse("Create Book – requires 'bookshelf.can_create' permission.")
 
@@ -67,10 +66,8 @@ def book_create(request):
 @permission_required("bookshelf.can_edit", raise_exception=True)
 def book_edit(request, book_id):
     """
-    Example edit endpoint.
-    In a real app, you would use a ModelForm and POST handling here.
+    Example edit endpoint, using ORM safely.
     """
-    # Just a simple placeholder using ORM safely:
     book = get_object_or_404(Book, id=book_id)
     return HttpResponse(f"Edit Book {book.id} – requires 'bookshelf.can_edit' permission.")
 
@@ -78,9 +75,7 @@ def book_edit(request, book_id):
 @permission_required("bookshelf.can_delete", raise_exception=True)
 def book_delete(request, book_id):
     """
-    Example delete endpoint.
-    In a real app, you would typically only allow POST/DELETE for actual deletion.
+    Example delete endpoint, using ORM safely.
     """
-    # Just a simple placeholder using ORM safely:
     book = get_object_or_404(Book, id=book_id)
     return HttpResponse(f"Delete Book {book.id} – requires 'bookshelf.can_delete' permission.")

@@ -6,7 +6,7 @@
 <body>
     <h1>Books</h1>
 
-    <!-- Search form (GET) – no CSRF needed, but form input is validated in BookSearchForm -->
+    <!-- Search form (GET) – data still validated via BookSearchForm -->
     <form method="get">
         {{ form.query.label_tag }}
         {{ form.query }}
@@ -21,6 +21,6 @@
         {% endfor %}
     </ul>
 
-    <p><a href="{% url 'bookshelf:form_example' %}">Add a new book</a></p>
+    <p><a href="{% url 'bookshelf:form_example' %}">Open secure example form</a></p>
 </body>
 </html>

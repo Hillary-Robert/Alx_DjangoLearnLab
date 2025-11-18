@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add a Book</title>
+    <title>Secure Example Form</title>
 </head>
 <body>
-    <h1>Add a New Book</h1>
+    <h1>Secure Example Form</h1>
 
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-
-        <button type="submit">Save</button>
+        <button type="submit">Submit</button>
     </form>
 
     <p><a href="{% url 'bookshelf:book_list' %}">Back to book list</a></p>
