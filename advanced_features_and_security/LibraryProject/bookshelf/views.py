@@ -5,7 +5,9 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_protect
 
 from .models import Book
-from .forms import BookForm, BookSearchForm, ExampleForm
+from .forms import ExampleForm
+from .forms import BookForm
+from .forms import BookSearchForm
 
 
 @csrf_protect
