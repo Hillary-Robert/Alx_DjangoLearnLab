@@ -1,15 +1,13 @@
-from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
-class CustomUserManager(UserManager):
-    def create_user(self, username, email=None, password=None, **extra_fields):
-        """
-        Create and save a regular user with the given username, email,
-        password and extra fields (like date_of_birth, profile_photo).
-        """
+class CustomUserManager(BaseUserManager):
+    use_in_migrations = True
+
+    def _create_user(self, username, email, password, **extra_fields):
         if not username:
-            raise ValueError("The Username field is required")
+            raise ValueError("Username must be set")
 
         email = self.normalize_email(email)
         user = self.model(username=username, email=email, **extra_fields)
@@ -17,21 +15,15 @@ class CustomUserManager(UserManager):
         user.save(using=self._db)
         return user
 
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        return self._create_user(username, email, password, **extra_fields)
+
     def create_superuser(self, username, email=None, password=None, **extra_fields):
-        """
-        Create and save a superuser with the given username, email,
-        password and extra fields.
-        """
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_active", True)
-
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
-
-        return self.create_user(username, email, password, **extra_fields)
+        return self._create_user(username, email, password, **extra_fields)
 
 
 class CustomUser(AbstractUser):

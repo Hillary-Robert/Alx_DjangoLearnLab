@@ -12,13 +12,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -30,6 +29,9 @@ SECRET_KEY = "django-insecure-+#w#^*g(_^%br#i%vku8x6l_521yeu9b22eojr6$7tksh%^w33
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
+
 
 
 # Application definition
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = "accounts.CustomUser"
+
 
 
 MIDDLEWARE = [

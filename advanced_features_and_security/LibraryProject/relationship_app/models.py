@@ -1,11 +1,18 @@
 from django.db import models
-from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
+from django.contrib.auth import get_user_model
 
+# Use the active user model (our CustomUser)
 User = get_user_model()
 
+# Choices for the role field
+ROLE_CHOICES = (
+    ("Admin", "Admin"),
+    ("Librarian", "Librarian"),
+    ("Member", "Member"),
+)
 
 
 class Author(models.Model):
@@ -20,7 +27,7 @@ class Book(models.Model):
     author = models.ForeignKey(
         Author,
         on_delete=models.CASCADE,
-        related_name='books'
+        related_name="books",
     )
 
     def __str__(self):
@@ -28,9 +35,9 @@ class Book(models.Model):
 
     class Meta:
         permissions = (
-            ('can_add_book', 'Can add book'),
-            ('can_change_book', 'Can change book'),
-            ('can_delete_book', 'Can delete book'),
+            ("can_add_book", "Can add book"),
+            ("can_change_book", "Can change book"),
+            ("can_delete_book", "Can delete book"),
         )
 
 
@@ -38,8 +45,8 @@ class Library(models.Model):
     name = models.CharField(max_length=255)
     books = models.ManyToManyField(
         Book,
-        related_name='libraries',
-        blank=True
+        related_name="libraries",
+        blank=True,
     )
 
     def __str__(self):
@@ -51,26 +58,39 @@ class Librarian(models.Model):
     library = models.OneToOneField(
         Library,
         on_delete=models.CASCADE,
-        related_name='librarian'
+        related_name="librarian",
     )
 
     def __str__(self):
         return f"{self.name} - {self.library.name}"
 
 
-class UserProfile(models.Model):
-    ROLE_CHOICES = (
-        ('Admin', 'Admin'),
-        ('Librarian', 'Librarian'),
-        ('Member', 'Member'),
-    )
+from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
+
+ROLE_CHOICES = (
+    ("Admin", "Admin"),
+    ("Librarian", "Librarian"),
+    ("Member", "Member"),
+)
+
+
+class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
+        related_name="userprofile",
     )
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
-
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default="Member",
+    )
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
@@ -85,4 +105,3 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
             instance.userprofile.save()
         else:
             UserProfile.objects.create(user=instance)
-
