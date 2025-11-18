@@ -35,6 +35,34 @@ DEBUG = False
 SECURE_BROWSER_XSS_FILTER = True  # Ask the browser to enable its XSS filter
 SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME sniffing
 
+
+# Redirect all HTTP requests to HTTPS.
+SECURE_SSL_REDIRECT = True
+
+
+# HTTP Strict Transport Security (HSTS).
+# Instructs browsers to only use HTTPS for this domain for 1 year.
+SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow domain to be added to browser preload lists
+
+# Cookies should only be sent over HTTPS connections.
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Additional browser-side protections.
+# Prevent the site from being embedded in an iframe (clickjacking protection).
+X_FRAME_OPTIONS = "DENY"
+
+
+# Prevent the browser from MIME-sniffing and interpreting files as a different type.
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+
+# Ask the browser to enable its built-in XSS protection/filter.
+SECURE_BROWSER_XSS_FILTER = True
+
+
 # Clickjacking protection: prevent the site from being embedded in iframes
 X_FRAME_OPTIONS = "DENY"
 
