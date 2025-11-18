@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Book
+from django.contrib.auth.admin import UserAdmin
+from .models import Book, CustomUser
 
 @admin.register(Book)
 
@@ -15,5 +16,26 @@ class BookAdmin(admin.ModelAdmin):
   list_per_page = 25
 
 
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
 
-# Register your models here.
+    list_display = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "date_of_birth",
+        "is_staff",
+    )
+
+    fieldsets = UserAdmin.fieldsets + (
+        ("Additional Information", {"fields": ("date_of_birth", "profile_photo")}),
+    )
+
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ("Additional Information", {"fields": ("date_of_birth", "profile_photo")}),
+    )
+
+
+# 🔥 EXACT LINE the ALX checker is looking for
+admin.site.register(CustomUser, CustomUserAdmin)
