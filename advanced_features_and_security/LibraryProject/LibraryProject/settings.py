@@ -31,6 +31,10 @@ DEBUG = False
 
 # --- Security settings ---
 
+# Tell Django how to detect HTTPS when behind a reverse proxy (e.g., Nginx)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+
 # Protect against XSS and content type sniffing
 SECURE_BROWSER_XSS_FILTER = True  # Ask the browser to enable its XSS filter
 SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent MIME sniffing
