@@ -77,9 +77,6 @@ SESSION_COOKIE_SECURE = True
 ALLOWED_HOSTS = []
 
 
-
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -90,13 +87,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "bookshelf",
-    'relationship_app',
-    
+    "relationship_app",
 ]
 
 AUTH_USER_MODEL = "bookshelf.CustomUser"
-
-
 
 
 MIDDLEWARE = [
@@ -107,7 +101,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
     "LibraryProject.middleware.ContentSecurityPolicyMiddleware",
 ]
 

@@ -3,14 +3,16 @@ from django.views.generic.detail import DetailView  # required by checker
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.decorators import permission_required  # ✅ EXACT LINE the checker wants
+from django.contrib.auth.decorators import (
+    permission_required,
+)  # ✅ EXACT LINE the checker wants
 from .models import Author
 from .models import Book
 from .models import Library  # required by checker
 
 
-
 # ---------- Existing: list all books ----------
+
 
 def list_books(request):
     books = Book.objects.all()
@@ -19,6 +21,7 @@ def list_books(request):
 
 # ---------- Existing: library detail view ----------
 
+
 class LibraryDetailView(DetailView):
     model = Library
     template_name = "relationship_app/library_detail.html"
@@ -26,6 +29,7 @@ class LibraryDetailView(DetailView):
 
 
 # ---------- Existing: User registration ----------
+
 
 def register(request):
     if request.method == "POST":
@@ -41,6 +45,7 @@ def register(request):
 
 
 # ---------- Role helpers ----------
+
 
 def is_admin(user):
     return (
@@ -68,6 +73,7 @@ def is_member(user):
 
 # ---------- Role-based views ----------
 
+
 @user_passes_test(is_admin, login_url="login")
 def admin_view(request):
     return render(request, "relationship_app/admin_view.html")
@@ -85,7 +91,8 @@ def member_view(request):
 
 # ---------- Permission-based Book actions ----------
 
-@permission_required('relationship_app.can_add_book', login_url='login')
+
+@permission_required("relationship_app.can_add_book", login_url="login")
 def add_book(request):
     """
     Only users with 'can_add_book' permission can create a new book.
@@ -102,7 +109,7 @@ def add_book(request):
     return render(request, "relationship_app/add_book.html")
 
 
-@permission_required('relationship_app.can_change_book', login_url='login')
+@permission_required("relationship_app.can_change_book", login_url="login")
 def edit_book(request, pk):
     """
     Only users with 'can_change_book' permission can edit a book.
@@ -123,7 +130,7 @@ def edit_book(request, pk):
     return render(request, "relationship_app/edit_book.html", {"book": book})
 
 
-@permission_required('relationship_app.can_delete_book', login_url='login')
+@permission_required("relationship_app.can_delete_book", login_url="login")
 def delete_book(request, pk):
     """
     Only users with 'can_delete_book' permission can delete a book.

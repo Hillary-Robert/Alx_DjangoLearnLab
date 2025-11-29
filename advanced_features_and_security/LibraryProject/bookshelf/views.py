@@ -25,9 +25,7 @@ def book_list(request):
     if form.is_valid():
         query = form.cleaned_data.get("query")
         if query:
-            books = books.filter(
-                Q(title__icontains=query) | Q(author__icontains=query)
-            )
+            books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
 
     context = {"books": books, "form": form}
     return render(request, "bookshelf/book_list.html", context)
@@ -48,9 +46,7 @@ def form_example(request):
             # In a real app you might save or process this data here.
             cleaned = form.cleaned_data
             # We don't use raw SQL; we only read cleaned data.
-            return HttpResponse(
-                f"Received data safely from {cleaned['name']}."
-            )
+            return HttpResponse(f"Received data safely from {cleaned['name']}.")
     else:
         form = ExampleForm()
 
@@ -71,7 +67,9 @@ def book_edit(request, book_id):
     Example edit endpoint, using ORM safely.
     """
     book = get_object_or_404(Book, id=book_id)
-    return HttpResponse(f"Edit Book {book.id} – requires 'bookshelf.can_edit' permission.")
+    return HttpResponse(
+        f"Edit Book {book.id} – requires 'bookshelf.can_edit' permission."
+    )
 
 
 @permission_required("bookshelf.can_delete", raise_exception=True)
@@ -80,4 +78,6 @@ def book_delete(request, book_id):
     Example delete endpoint, using ORM safely.
     """
     book = get_object_or_404(Book, id=book_id)
-    return HttpResponse(f"Delete Book {book.id} – requires 'bookshelf.can_delete' permission.")
+    return HttpResponse(
+        f"Delete Book {book.id} – requires 'bookshelf.can_delete' permission."
+    )
