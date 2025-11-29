@@ -169,9 +169,9 @@ class BookDetailGenericView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-class BookCreateGenericView(generics.CreateAPIView):
+class BookCreateView(generics.CreateAPIView):
     """
-    BookCreateGenericView
+    BookCreateView
 
     Create view for adding a new book using CreateAPIView.
 
@@ -200,9 +200,9 @@ class BookCreateGenericView(generics.CreateAPIView):
         serializer.save()
 
 
-class BookUpdateGenericView(generics.UpdateAPIView):
+class BookUpdateView(generics.UpdateAPIView):
     """
-    BookUpdateGenericView
+    BookUpdateView
 
     Update view for modifying an existing book using UpdateAPIView.
 
@@ -226,9 +226,9 @@ class BookUpdateGenericView(generics.UpdateAPIView):
         serializer.save()
 
 
-class BookDeleteGenericView(generics.DestroyAPIView):
+class BookDeleteView(generics.DestroyAPIView):
     """
-    BookDeleteGenericView
+    BookDeleteView
 
     Delete view for removing a book using DestroyAPIView.
 
