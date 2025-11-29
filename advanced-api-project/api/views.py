@@ -1,10 +1,11 @@
 from rest_framework import generics, filters
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters_django  # required import for checks
 
 from .models import Book
 from .serializers import BookSerializer
+
 
 
 class BookListView(generics.ListCreateAPIView):
