@@ -11,12 +11,17 @@ from .views import (
     CommentCreateView,
     CommentUpdateView,
     CommentDeleteView,
+    PostByTagListView,
 )
 
 urlpatterns = [
     # Home + post list
     path('', PostListView.as_view(), name='blog-home'),
     path('posts/', PostListView.as_view(), name='post-list'),
+    
+
+    path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='posts-by-tag'),
+
 
     # Auth URLs
     path('login/', auth_views.LoginView.as_view(
