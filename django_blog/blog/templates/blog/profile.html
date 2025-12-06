@@ -1,0 +1,20 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<h2>Your Profile</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ u_form.non_field_errors }}
+
+    {% for field in u_form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {{ field.errors }}
+        </div>
+    {% endfor %}
+
+    <button type="submit">Save changes</button>
+</form>
+{% endblock %}
