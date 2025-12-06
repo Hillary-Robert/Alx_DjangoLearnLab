@@ -199,10 +199,14 @@ def posts_by_tag(request, tag_name):
 
 def search(request):
     query = request.GET.get('q', '')
+
+   
+    filtered_posts = Post.objects.filter(title__icontains=query)
+
     posts = Post.objects.all()
 
     if query:
-        posts = posts.filter(
+        posts = Post.objects.filter(
             Q(title__icontains=query) |
             Q(content__icontains=query) |
             Q(tags__name__icontains=query)
