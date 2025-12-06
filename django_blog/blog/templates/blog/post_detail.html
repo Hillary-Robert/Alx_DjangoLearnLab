@@ -7,6 +7,16 @@
         By {{ object.author.username }} • {{ object.published_date|date:"Y-m-d H:i" }}
     </p>
 
+    {# ➕ TAGS BLOCK #}
+    {% if object.tags.all %}
+        <p class="tags">
+            Tags:
+            {% for tag in object.tags.all %}
+                <a href="{% url 'posts-by-tag' tag.name %}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+    {% endif %}
+
     <div class="content">
         {{ object.content|linebreaks }}
     </div>

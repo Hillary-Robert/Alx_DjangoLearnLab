@@ -19,6 +19,12 @@
             <a href="{% url 'login' %}">Login</a>
             <a href="{% url 'register' %}">Register</a>
         {% endif %}
+
+        <!-- Search bar -->
+        <form action="{% url 'post-search' %}" method="get" class="search-form">
+            <input type="text" name="q" placeholder="Search posts..." value="{{ request.GET.q }}">
+            <button type="submit">Search</button>
+        </form>
     </nav>
 </header>
 
@@ -31,8 +37,7 @@
         </ul>
     {% endif %}
 
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
 </main>
 
 <script src="{% static 'blog/js/main.js' %}"></script>

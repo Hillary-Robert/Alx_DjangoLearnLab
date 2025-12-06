@@ -9,9 +9,10 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
+from django.db.models import Q
 
 from .forms import UserRegisterForm, UserUpdateForm, PostForm, CommentForm
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 
 
 def home(request):
@@ -75,8 +76,23 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     template_name = 'blog/post_form.html'
 
     def form_valid(self, form):
+        # set post author
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        # handle tags
+        tags_str = form.cleaned_data.get('tags', '')
+        tag_names = [t.strip() for t in tags_str.split(',') if t.strip()]
+        tags = []
+        for name in tag_names:
+            tag, _ = Tag.objects.get_or_create(name=name)
+            tags.append(tag)
+        if tags:
+            self.object.tags.set(tags)
+        else:
+            self.object.tags.clear()
+
+        return response
 
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -84,9 +100,31 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = PostForm
     template_name = 'blog/post_form.html'
 
+    def get_initial(self):
+        initial = super().get_initial()
+        # pre-fill tags as comma-separated list
+        if self.object:
+            tags_str = ', '.join(tag.name for tag in self.object.tags.all())
+            initial['tags'] = tags_str
+        return initial
+
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        # update tags
+        tags_str = form.cleaned_data.get('tags', '')
+        tag_names = [t.strip() for t in tags_str.split(',') if t.strip()]
+        tags = []
+        for name in tag_names:
+            tag, _ = Tag.objects.get_or_create(name=name)
+            tags.append(tag)
+        if tags:
+            self.object.tags.set(tags)
+        else:
+            self.object.tags.clear()
+
+        return response
 
     def test_func(self):
         post = self.get_object()
@@ -111,7 +149,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     template_name = 'blog/comment_form.html'
 
     def form_valid(self, form):
-        # URL is now post/<int:pk>/comments/new/
+        # URL: post/<int:pk>/comments/new/
         post = get_object_or_404(Post, pk=self.kwargs['pk'])
         form.instance.post = post
         form.instance.author = self.request.user
@@ -120,7 +158,6 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
-
 
 
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -147,3 +184,31 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.author
+
+
+# ---- Tag filter & search views ----
+
+def posts_by_tag(request, tag_name):
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = tag.posts.order_by('-published_date')
+    return render(request, 'blog/post_list_by_tag.html', {
+        'tag': tag,
+        'posts': posts,
+    })
+
+
+def search(request):
+    query = request.GET.get('q', '')
+    posts = Post.objects.all()
+
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    return render(request, 'blog/search_results.html', {
+        'query': query,
+        'posts': posts,
+    })
