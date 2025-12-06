@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<h2>
+    {% if object %}
+        Edit Post
+    {% else %}
+        New Post
+    {% endif %}
+</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {{ field.errors }}
+        </div>
+    {% endfor %}
+
+    <button type="submit">
+        {% if object %}Save changes{% else %}Create post{% endif %}
+    </button>
+</form>
+{% endblock %}
