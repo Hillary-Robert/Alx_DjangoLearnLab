@@ -113,6 +113,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "social_media_api.wsgi.application"
+DB_PORT = os.getenv("DB_PORT", "5432")
+PORT = os.getenv("DB_PORT", "5432")
 
 # Database (Postgres in production via DATABASE_URL, sqlite fallback locally)
 DATABASES = {
