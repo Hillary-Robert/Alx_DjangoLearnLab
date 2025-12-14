@@ -6,11 +6,11 @@ class User(AbstractUser):
     bio = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to="profile_pics/", blank=True, null=True)
 
-    # followers: users following THIS user
-    followers = models.ManyToManyField(
+    # Users that THIS user follows
+    following = models.ManyToManyField(
         "self",
         symmetrical=False,
-        related_name="following",  # users THIS user follows
+        related_name="followers",
         blank=True,
     )
 
