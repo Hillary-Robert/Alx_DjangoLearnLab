@@ -11,5 +11,5 @@ class IsOwnerOrReadOnly(BasePermission):
         if request.method in SAFE_METHODS:
             return True
 
-        # For Post and Comment, owner field is "author"
+       
         return getattr(obj, "author", None) == request.user
