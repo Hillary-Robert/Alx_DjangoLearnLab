@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     # Local apps
     "accounts",
     "posts",
+    "notifications",
 ]
 
 
