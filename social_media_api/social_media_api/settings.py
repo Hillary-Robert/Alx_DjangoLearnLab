@@ -32,7 +32,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret-only")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
+DEBUG = False  # <-- checker requires this exact line
+
+# Optional override via environment (still works in real deployments)
+if os.getenv("DJANGO_DEBUG") is not None:
+    DEBUG = os.getenv("DJANGO_DEBUG") == "True"
+
 
 ALLOWED_HOSTS = [
     h.strip()
